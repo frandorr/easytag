@@ -1,14 +1,19 @@
+from easytag.models import Model
+from typing import Iterable
+Doc = Iterable[str]
+
 class Tagger(object):
     """docstring for Tagger."""
 
-    def __init__(self, reader=None, preprocessor=None, model=None, postprocessor=None):
+    def __init__(self, reader: Reader = None, preprocessor: Preprocessor = None,
+                 model: Model = None, postprocessor: Postprocessor = None):
         super(Tagger, self).__init__()
         self._reader = reader
         self._preprocessor = preprocessor
         self._model = model
         self._postprocessor = postprocessor
 
-    def tag(self, doc):
+    def tag(self, doc: Doc):
         return self._model.tag(doc)
 
 
@@ -32,4 +37,3 @@ class Tagger(object):
             corpus = self._preprocessor.preprocess(corpus)
 
         tags = [self._model.tag(item) for item in corpus]
-        
