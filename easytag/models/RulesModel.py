@@ -1,8 +1,17 @@
 from easytag.common import types
 from collections import namedtuple
-from typing import Iterable, List
-from easytag.common.types import Doc, LabelRules, Rule, Label, LabelTag, CorpusTags
+from typing import Iterable, List, Callable
+from easytag.common.types import Doc, Label, LabelTag, CorpusTags
+from dataclasses import dataclass
 
+Rule = Callable[[Doc], bool]
+
+@dataclass
+class LabelRules:
+    label: types.Label
+    rules: List[Rule]
+    def apply_rules(self, doc:Doc):
+        return any([rule(doc) for rule in self.rules])
 
 class RulesModel(object):
     """docstring for RulesModel."""
@@ -26,7 +35,7 @@ class RulesModel(object):
             Exception: description
 
         """
-        res = [lr.apply_rule(doc) for lr in self._labels_rules]
+        res = [lr.apply_rules(doc) for lr in self._labels_rules]
         return res
 
 
